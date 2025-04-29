@@ -81,6 +81,7 @@ flutter:
     - assets/fonts/Cairo-Medium.ttf
     - assets/fonts/Cairo-SemiBold.ttf
     - assets/fonts/Cairo-Bold.ttf
+    - assets/images/prophet.png
 
   fonts:
     - family: Cairo

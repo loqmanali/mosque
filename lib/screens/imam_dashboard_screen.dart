@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/user_role.dart';
 import '../widgets/shadcn/button.dart';
 import '../widgets/shadcn/card.dart' as shadcn;
+import 'login_screen.dart';
 import 'maintenance_request_screen_ar.dart';
 import 'profile_screen.dart';
 import 'request_details_screen.dart';
@@ -158,10 +159,17 @@ class ImamDashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        // leading: IconButton(
-        //   icon: const Icon(Icons.search),
-        //   onPressed: () => _showSearchDialog(context),
-        // ),
+        leading: IconButton(
+          icon: const Icon(Icons.logout_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+        ),
         title: const Text('لوحة تحكم الإمام'),
         actions: [
           IconButton(

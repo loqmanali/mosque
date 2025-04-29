@@ -5,6 +5,7 @@ import '../widgets/shadcn/button.dart';
 import '../widgets/shadcn/card.dart' as shadcn;
 import '../widgets/shadcn/input.dart';
 import 'companies_screen.dart';
+import 'login_screen.dart';
 import 'profile_screen.dart';
 import 'reports_screen.dart';
 import 'request_details_screen.dart';
@@ -101,6 +102,17 @@ class _DashboardContent extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('لوحة تحكم المشرف'),
+        leading: IconButton(
+          icon: const Icon(Icons.logout_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),

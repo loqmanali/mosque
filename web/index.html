@@ -1,19 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
 
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -37,39 +25,73 @@
   <link rel="icon" type="image/png" sizes="32x32" href="icons/Icon-192.png">
   <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png">
   <link rel="icon" type="image/png" sizes="512x512" href="icons/Icon-512.png">
-  <link rel="mask-icon" href="icons/mosque.svg" color="#4CAF50">
+  <link rel="mask-icon" href="icons/mosque.png" color="#4CAF50">
 
   <title>Mosque App</title>
   <link rel="manifest" href="manifest.json">
 
   <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+    }
     .loading {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       margin: 0;
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       height: 100%;
       width: 100%;
-      background-color: #4CAF50;
+      background: linear-gradient(135deg, #1e6f5c, #289672);
+      z-index: 9999;
+    }
+    .loading-container {
+      text-align: center;
     }
     .loading img {
-      width: 150px;
-      height: 150px;
-      animation: pulse 2s infinite;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+      animation: float 3s ease-in-out infinite;
     }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+    .loading-text {
+      color: white;
+      font-size: 24px;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+    .loading-spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
   <div id="loading" class="loading">
-    <img src="icons/mosque.svg" alt="Loading...">
+    <div class="loading-container">
+      <img src="icons/mosque.png" alt="Mosque App">
+      <div class="loading-text">جاري التحميل...</div>
+      <div class="loading-spinner"></div>
+    </div>
   </div>
 
   <script>

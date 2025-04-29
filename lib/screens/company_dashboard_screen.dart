@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/user_role.dart';
 import '../widgets/shadcn/button.dart' as shadcn;
 import '../widgets/shadcn/card.dart' as shadcn;
+import 'login_screen.dart';
 
 class CompanyDashboardScreen extends StatelessWidget {
   final User? user;
@@ -14,6 +15,17 @@ class CompanyDashboardScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('لوحة تحكم الشركة'),
+        leading: IconButton(
+          icon: const Icon(Icons.logout_outlined),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
+            );
+          },
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.person),
