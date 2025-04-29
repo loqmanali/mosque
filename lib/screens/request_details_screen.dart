@@ -1,6 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
-import '../widgets/shadcn/button.dart';
 import '../widgets/shadcn/card.dart' as shadcn;
 
 class RequestDetailsScreen extends StatelessWidget {
@@ -11,44 +12,139 @@ class RequestDetailsScreen extends StatelessWidget {
     required this.request,
   }) : super(key: key);
 
+  Widget _buildMediaPreview(String mediaUrl) {
+    if (mediaUrl.endsWith('.mp4') || mediaUrl.endsWith('.mov')) {
+      return _buildVideoPreview(mediaUrl);
+    } else {
+      return _buildImagePreview(mediaUrl);
+    }
+  }
+
+  Widget _buildImagePreview(String imageUrl) {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          fit: BoxFit.cover,
+          placeholder: (context, url) => Container(
+            color: Colors.grey[200],
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
+            color: Colors.grey[200],
+            child: const Icon(Icons.error),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildVideoPreview(String videoUrl) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.black,
+        ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              clipBehavior: Clip.hardEdge,
+              child: VideoPreview(videoUrl: videoUrl),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('تفاصيل الطلب'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              // TODO: Implement edit functionality
-            },
-          ),
-        ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(request['title'] ?? ''),
       ),
       body: Directionality(
         textDirection: TextDirection.rtl,
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            // Request Header
+            // Status Card
             shadcn.Card(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Status Row
                   Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircleAvatar(
+                              radius: 4,
+                              backgroundColor: Colors.blue,
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'تم الإرسال',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Spacer(),
+                      Text(
+                        'رقم الطلب: ${request['id'] ?? '7c6c59'}',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Request Info
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          color: Colors.grey.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Icon(
-                          Icons.home_repair_service,
-                          color: Theme.of(context).primaryColor,
-                          size: 32,
+                        child: const Icon(
+                          Icons.video_camera_back_outlined,
+                          color: Colors.grey,
+                          size: 24,
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -57,226 +153,245 @@ class RequestDetailsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              request['title'] ?? '',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                              request['title'] ?? 'العنوان',
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              request['mosque'] ?? '',
-                              style: Theme.of(context).textTheme.bodyLarge,
+                              request['location'] ?? 'الموقع',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
                         ),
                       ),
-                      _buildStatusChip(request['status'] ?? ''),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Priority Badge
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.red.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.warning_rounded,
+                          color: Colors.red,
+                          size: 16,
+                        ),
+                        SizedBox(width: 4),
+                        Text(
+                          'أولوية عالية',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Description Section
+            shadcn.Card(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'الوصف',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    request['description'] ?? 'وصف الطلب',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // Media Section
+            shadcn.Card(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'الوسائط',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      ),
+                      Text(
+                        '1 من 1',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (request['media'] != null)
+                    _buildMediaPreview(request['media']!)
+                  else
+                    Container(
+                      height: 200,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.grey[300]!,
+                          width: 1,
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.image_not_supported_outlined,
+                            size: 48,
+                            color: Colors.grey[400],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            'لا توجد وسائط',
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
+            ),
+
+            // Created By Section
+            const SizedBox(height: 16),
+            shadcn.Card(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'تم الإنشاء بواسطة:',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        request['created_by'] ?? 'أحمد',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'آخر تحديث:',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        request['last_updated'] ?? '29 أبريل 2025، 19:00',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
                     ],
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-
-            // Request Details
-            shadcn.Card(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'تفاصيل الطلب',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildDetailRow(
-                      context, 'الشركة المنفذة:', request['company'] ?? ''),
-                  _buildDetailRow(
-                      context, 'تاريخ الطلب:', request['date'] ?? ''),
-                  _buildDetailRow(context, 'التكلفة:', request['cost'] ?? ''),
-                  _buildDetailRow(
-                      context, 'الأولوية:', request['priority'] ?? ''),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Timeline
-            shadcn.Card(
-              padding: const EdgeInsets.all(24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'مسار الطلب',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTimelineItem(
-                    context,
-                    title: 'تم إنشاء الطلب',
-                    date: request['date'] ?? '',
-                    isFirst: true,
-                  ),
-                  _buildTimelineItem(
-                    context,
-                    title: 'في انتظار الموافقة',
-                    date: 'منذ يومين',
-                    isLast: true,
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 24),
-
-            // Actions
-            Row(
-              children: [
-                Expanded(
-                  child: Button(
-                    onPressed: () {
-                      // TODO: Implement reject
-                    },
-                    variant: ButtonVariant.outline,
-                    child: const Text('رفض'),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Button(
-                    onPressed: () {
-                      // TODO: Implement approve
-                    },
-                    child: const Text('موافقة'),
-                  ),
-                ),
-              ],
             ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildDetailRow(BuildContext context, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: Theme.of(context).textTheme.bodySmall?.color,
-                ),
-          ),
-          const SizedBox(width: 8),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-        ],
-      ),
-    );
+class VideoPreview extends StatefulWidget {
+  final String videoUrl;
+
+  const VideoPreview({
+    Key? key,
+    required this.videoUrl,
+  }) : super(key: key);
+
+  @override
+  State<VideoPreview> createState() => _VideoPreviewState();
+}
+
+class _VideoPreviewState extends State<VideoPreview> {
+  late VideoPlayerController _controller;
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.network(widget.videoUrl)
+      ..initialize().then((_) {
+        setState(() {
+          _isInitialized = true;
+        });
+      });
   }
 
-  Widget _buildTimelineItem(
-    BuildContext context, {
-    required String title,
-    required String date,
-    bool isFirst = false,
-    bool isLast = false,
-  }) {
-    return IntrinsicHeight(
-      child: Row(
-        children: [
-          SizedBox(
-            width: 24,
-            child: Column(
-              children: [
-                Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).primaryColor,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-                if (!isLast)
-                  Expanded(
-                    child: Container(
-                      width: 2,
-                      color: Theme.of(context).primaryColor.withOpacity(0.2),
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(bottom: isLast ? 0 : 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  Text(
-                    date,
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
-  Widget _buildStatusChip(String status) {
-    Color color;
-    switch (status) {
-      case 'في انتظار الموافقة':
-        color = Colors.orange;
-        break;
-      case 'قيد التنفيذ':
-        color = Colors.blue;
-        break;
-      case 'مكتمل':
-        color = Colors.green;
-        break;
-      default:
-        color = Colors.grey;
+  @override
+  Widget build(BuildContext context) {
+    if (!_isInitialized) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
     }
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        status,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        VideoPlayer(_controller),
+        IconButton(
+          icon: Icon(
+            _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+            size: 48,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            setState(() {
+              _controller.value.isPlaying
+                  ? _controller.pause()
+                  : _controller.play();
+            });
+          },
         ),
-      ),
+      ],
     );
   }
 }

@@ -18,6 +18,7 @@ class LoginScreen extends HookWidget {
     final passwordController = useTextEditingController();
     final isLoading = useState(false);
     final isPasswordVisible = useState(false);
+    final selectedRole = useState<UserRole>(UserRole.imam);
 
     void navigateBasedOnRole(User user) {
       if (!context.mounted) return;
@@ -62,15 +63,53 @@ class LoginScreen extends HookWidget {
         id: '1',
         name: usernameController.text,
         email: '${usernameController.text}@example.com',
-        role: usernameController.text.toLowerCase().contains('imam')
-            ? UserRole.imam
-            : usernameController.text.toLowerCase().contains('admin')
-                ? UserRole.admin
-                : UserRole.company,
+        role: selectedRole.value,
       );
 
       isLoading.value = false;
       navigateBasedOnRole(mockUser);
+    }
+
+    Widget buildRoleButton(UserRole role, String label, IconData icon) {
+      final isSelected = selectedRole.value == role;
+      return Expanded(
+        child: GestureDetector(
+          onTap: () => selectedRole.value = role,
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: isSelected
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).dividerColor,
+              ),
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  icon,
+                  size: 32,
+                  color: isSelected
+                      ? Colors.white
+                      : Theme.of(context).primaryColor,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : null,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
 
     return Scaffold(
@@ -86,14 +125,13 @@ class LoginScreen extends HookWidget {
                   width: 120,
                   height: 120,
                   decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    color: Theme.of(context).primaryColor.withOpacity(0.1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.mosque,
                     size: 60,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).primaryColor,
                   ),
                 ),
                 const SizedBox(height: 32),
@@ -118,6 +156,38 @@ class LoginScreen extends HookWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      // Role Selection
+                      Text(
+                        'اختر نوع الحساب',
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                        textAlign: TextAlign.right,
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        children: [
+                          buildRoleButton(
+                            UserRole.imam,
+                            'إمام/موظف',
+                            Icons.person_outline,
+                          ),
+                          const SizedBox(width: 12),
+                          buildRoleButton(
+                            UserRole.admin,
+                            'مشرف',
+                            Icons.admin_panel_settings_outlined,
+                          ),
+                          const SizedBox(width: 12),
+                          buildRoleButton(
+                            UserRole.company,
+                            'صيانة',
+                            Icons.business_outlined,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
                       Input(
                         controller: usernameController,
                         label: 'اسم المستخدم',

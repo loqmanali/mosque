@@ -20,7 +20,7 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="Your digital companion for mosque services and prayer times">
   <meta name="theme-color" content="#4CAF50">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
@@ -28,21 +28,64 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Mosque App">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png">
+  <link rel="apple-touch-startup-image" href="icons/Icon-512.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="icons/Icon-512.png"/>
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/Icon-512.png">
+  <link rel="mask-icon" href="icons/mosque.svg" color="#4CAF50">
 
   <title>Mosque App</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    .loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #4CAF50;
+    }
+    .loading img {
+      width: 150px;
+      height: 150px;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+  </style>
 </head>
 <body>
+  <div id="loading" class="loading">
+    <img src="icons/mosque.svg" alt="Loading...">
+  </div>
+
   <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', function () {
+    window.addEventListener('load', function() {
+      var loading = document.querySelector('#loading');
+      if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('flutter_service_worker.js');
-      });
-    }
+      }
+    });
   </script>
   <script src="flutter_bootstrap.js" async></script>
+  <script>
+    window.addEventListener('flutter-first-frame', function() {
+      var loading = document.querySelector('#loading');
+      loading.remove();
+    });
+  </script>
 </body>
 </html>

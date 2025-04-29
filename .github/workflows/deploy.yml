@@ -10,22 +10,41 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
+          flutter-version: '3.19.3'
           channel: 'stable'
-          
+          cache: true
+          cache-key: flutter-:os:-:channel:-:version:-:arch:-:hash
+          cache-path: ${{ runner.tool_cache }}/flutter/:channel:-:version:-:arch
+          architecture: x64
+      
+      - name: Cache pub dependencies
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.PUB_CACHE }}
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: ${{ runner.os }}-pub-
+
       - name: Install dependencies
         run: flutter pub get
         
+      - name: Enable web
+        run: flutter config --enable-web
+        
       - name: Build web
-        run: flutter build web --base-href "/mosque/"
+        run: flutter build web --release --base-href "/mosque/" --web-renderer canvaskit
         
       - name: Setup Pages
         uses: actions/configure-pages@v4

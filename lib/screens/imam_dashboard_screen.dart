@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/user_role.dart';
 import '../widgets/shadcn/button.dart';
 import '../widgets/shadcn/card.dart' as shadcn;
-import 'maintenance_request_screen.dart';
+import 'maintenance_request_screen_ar.dart';
 import 'profile_screen.dart';
 import 'request_details_screen.dart';
 
@@ -11,6 +11,117 @@ class ImamDashboardScreen extends StatelessWidget {
   final User? user;
 
   const ImamDashboardScreen({Key? key, this.user}) : super(key: key);
+
+  // void _showSearchDialog(BuildContext context) {
+  //   showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     backgroundColor: Colors.transparent,
+  //     transitionAnimationController: AnimationController(
+  //       duration: const Duration(milliseconds: 400),
+  //       vsync: Navigator.of(context),
+  //     ),
+  //     builder: (BuildContext context) {
+  //       return AnimatedContainer(
+  //         duration: const Duration(milliseconds: 300),
+  //         curve: Curves.easeInOut,
+  //         decoration: const BoxDecoration(
+  //           color: Color(0xFF0A0A0A),
+  //           borderRadius: BorderRadius.only(
+  //             topLeft: Radius.circular(20),
+  //             topRight: Radius.circular(20),
+  //           ),
+  //         ),
+  //         child: Directionality(
+  //           textDirection: TextDirection.rtl,
+  //           child: Padding(
+  //             padding: EdgeInsets.only(
+  //               bottom: MediaQuery.of(context).viewInsets.bottom,
+  //             ),
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 // Handle bar for bottom sheet
+  //                 Container(
+  //                   margin: const EdgeInsets.only(top: 8),
+  //                   width: 40,
+  //                   height: 4,
+  //                   decoration: BoxDecoration(
+  //                     color: Colors.grey[600],
+  //                     borderRadius: BorderRadius.circular(2),
+  //                   ),
+  //                 ),
+  //                 Padding(
+  //                   padding: const EdgeInsets.all(16.0),
+  //                   child: Row(
+  //                     children: [
+  //                       const Text(
+  //                         'بحث الطلبات',
+  //                         style: TextStyle(
+  //                           color: Colors.white,
+  //                           fontSize: 18,
+  //                           fontWeight: FontWeight.bold,
+  //                         ),
+  //                       ),
+  //                       const Spacer(),
+  //                       IconButton(
+  //                         icon: const Icon(Icons.close, color: Colors.white),
+  //                         onPressed: () => Navigator.pop(context),
+  //                       ),
+  //                     ],
+  //                   ),
+  //                 ),
+  //                 Padding(
+  //                   padding: const EdgeInsets.symmetric(
+  //                       horizontal: 16.0, vertical: 8.0),
+  //                   child: Container(
+  //                     decoration: BoxDecoration(
+  //                       color: const Color(0xFF1A1A1A),
+  //                       borderRadius: BorderRadius.circular(12),
+  //                       border: Border.all(
+  //                         color: Colors.grey[800]!,
+  //                         width: 1,
+  //                       ),
+  //                     ),
+  //                     padding: const EdgeInsets.symmetric(horizontal: 16),
+  //                     child: Row(
+  //                       children: [
+  //                         const Icon(Icons.search, color: Colors.grey),
+  //                         const SizedBox(width: 8),
+  //                         Expanded(
+  //                           child: TextField(
+  //                             textDirection: TextDirection.rtl,
+  //                             style: const TextStyle(color: Colors.white),
+  //                             decoration: const InputDecoration(
+  //                               hintText: 'ادخل كلمة للبحث',
+  //                               hintStyle: TextStyle(color: Colors.grey),
+  //                               border: InputBorder.none,
+  //                             ),
+  //                             autofocus: true,
+  //                             onChanged: (value) {
+  //                               // Implement search functionality here
+  //                             },
+  //                           ),
+  //                         ),
+  //                         IconButton(
+  //                           icon: const Icon(Icons.close, color: Colors.grey),
+  //                           onPressed: () {
+  //                             // Clear search text
+  //                           },
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 16),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +158,10 @@ class ImamDashboardScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        // leading: IconButton(
+        //   icon: const Icon(Icons.search),
+        //   onPressed: () => _showSearchDialog(context),
+        // ),
         title: const Text('لوحة تحكم الإمام'),
         actions: [
           IconButton(
@@ -117,11 +232,11 @@ class ImamDashboardScreen extends StatelessWidget {
                         context,
                         MaterialPageRoute(
                           builder: (context) =>
-                              const MaintenanceRequestScreen(),
+                              const MaintenanceRequestScreenAr(),
                         ),
                       );
                     },
-                    size: ButtonSize.lg,
+                    size: ButtonSize.sm,
                     child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -137,11 +252,28 @@ class ImamDashboardScreen extends StatelessWidget {
             const SizedBox(height: 24),
 
             // Requests Section
-            Text(
-              'طلبات الصيانة',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'طلبات الصيانة',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+                // TextButton(
+                //   onPressed: () {
+                //     // Navigate to maintenance requests list
+                //     Navigator.push(
+                //       context,
+                //       MaterialPageRoute(
+                //         builder: (context) => const ImamMaintenanceDashboard(),
+                //       ),
+                //     );
+                //   },
+                //   child: const Text('عرض الكل'),
+                // ),
+              ],
             ),
             const SizedBox(height: 16),
             ListView.builder(
@@ -150,50 +282,64 @@ class ImamDashboardScreen extends StatelessWidget {
               itemCount: requests.length,
               itemBuilder: (context, index) {
                 final request = requests[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: shadcn.Card(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              RequestDetailsScreen(request: request),
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: ListTile(
+                    contentPadding: const EdgeInsets.all(16),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            request['title'] as String,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
-                      );
-                    },
-                    child: Column(
+                        _buildPriorityBadge(request['priority'] as String),
+                      ],
+                    ),
+                    subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          request['title']!,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                        ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
-                            _buildStatusChip(request['status']!),
-                            const SizedBox(width: 8),
-                            _buildPriorityChip(request['priority']!),
-                            const Spacer(),
+                            Icon(
+                              Icons.location_on,
+                              size: 16,
+                              color: Colors.grey[600],
+                            ),
+                            const SizedBox(width: 4),
                             Text(
-                              request['date']!,
-                              style: Theme.of(context).textTheme.bodySmall,
+                              request['location'] as String,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 4),
                         Text(
-                          request['description']!,
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          request['description'] as String,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RequestDetailsScreen(
+                            request: request,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
               },
@@ -204,41 +350,7 @@ class ImamDashboardScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusChip(String status) {
-    Color color;
-    switch (status) {
-      case 'قيد الانتظار':
-        color = Colors.orange;
-        break;
-      case 'جاري العمل':
-        color = Colors.blue;
-        break;
-      case 'مكتمل':
-        color = Colors.green;
-        break;
-      default:
-        color = Colors.grey;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        status,
-        style: TextStyle(
-          color: color,
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPriorityChip(String priority) {
+  Widget _buildPriorityBadge(String priority) {
     Color color;
     switch (priority) {
       case 'عالية':
@@ -247,26 +359,22 @@ class ImamDashboardScreen extends StatelessWidget {
       case 'متوسطة':
         color = Colors.orange;
         break;
-      case 'منخفضة':
-        color = Colors.green;
-        break;
       default:
-        color = Colors.grey;
+        color = Colors.green;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: color),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         priority,
         style: TextStyle(
           color: color,
           fontSize: 12,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
