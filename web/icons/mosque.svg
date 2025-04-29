@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Main dome -->
+  <path d="M256 80 C 150 80, 60 160, 60 260 L 452 260 C 452 160, 362 80, 256 80" fill="#4CAF50"/>
+  
+  <!-- Minaret left -->
+  <rect x="100" y="140" width="40" height="200" fill="#4CAF50"/>
+  <path d="M90 140 L120 80 L150 140 Z" fill="#4CAF50"/>
+  
+  <!-- Minaret right -->
+  <rect x="372" y="140" width="40" height="200" fill="#4CAF50"/>
+  <path d="M362 140 L392 80 L422 140 Z" fill="#4CAF50"/>
+  
+  <!-- Base building -->
+  <rect x="60" y="260" width="392" height="172" fill="#4CAF50"/>
+  
+  <!-- Door -->
+  <path d="M226 312 L226 432 L286 432 L286 312 Q256 292 226 312" fill="#FFFFFF"/>
+  
+  <!-- Small domes -->
+  <circle cx="160" cy="260" r="30" fill="#4CAF50"/>
+  <circle cx="352" cy="260" r="30" fill="#4CAF50"/>
+</svg> 
